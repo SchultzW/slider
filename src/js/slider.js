@@ -1,4 +1,100 @@
 import './general';
+class SliderPuzzle {
+  constructor() 
+  {
+    this.$topTextInput =  document.getElementById('topText'); //id topText
+    this.$bottomTextInput = document.getElementById('bottomText');    //id bottomText
+    this.$imageInput = document.getElementById('image');   //topick file id image
+    this.$downloadButton = document.getElementById('downloadMeme'); //id downloadMeme
+    this.$canvas = document.getElementById('imgCanvas');
+      // these are not in the book
+    this.$defaultImage = document.querySelector('#defaultImage'); 
+    this.image = this.$defaultImage;
+    this.$context = this.$canvas.getContext('2d');//where we are drawing on the canvas
+    this.deviceWidth = window.innerWidth;
+    this.createCanvas=this.createCanvas.bind(this);
+    this.createImage=this.createImage.bind(this);
+    this.$imageInput.addEventListener('change',this.loadImage.bind(this));   
+    this.createCanvas();
+    this.createImage();
+  }
+  createCanvas()
+  {
+    this.$canvas.width=Math.min(640,this.deviceWidth-30);
+    this.$canvas.height=Math.min(480,this.deviceWidth-30);
+    
+  }
+  //renders the canvas
+  createImage()
+  {
+    
+    //we work with context variable not canvas variable
+    //clear image
+    this.$context.clearRect(0,0,this.$canvas.width,this.$canvas.height);
+    //draw image
+    this.resize(this.$canvas.height,this.$canvas.width);
+    //this.$context.drawImage(this.image,0,0);
+
+    //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+    //void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+    this.$context.drawImage(this.image,0,0,this.image.width,this.image.height,0,0,this.$canvas.width,this.$canvas.height);
+    
+
+
+  }
+  loadImage()
+  {
+   
+    /*
+    - PART 4 - Choose an image
+      - Write the method loadImage
+      - if there's something in the file input on the page
+      - declare and instantiate a FileReader object
+      - set it's onload hander to an anonymous function that
+      - set the image instance variable to a new image
+      - set it's onload handler to an anonymou function that
+      - calls the createMeme method
+      - set the src property of the image to the result from reading the file
+      - read the file
+  - Change the addEventListeners
+    - bind the class to the loadImage method
+    - add an event handler to the change event for the file input element on the page
+    */
+      if(this.$imageInput.files && this.$imageInput.files[0])
+      {
+        let reader=new FileReader();
+        reader.onload=()=>
+        {
+          //call back function when reader is done do this.
+          this.image=new Image();
+          this.image.onload=()=>
+          {
+              //this.$canvas.height=image.height;
+              //this.$canvas.width=image.width;
+              this.createMeme();
+          };
+          this.image.src=reader.result;
+        };
+        reader.readAsDataURL(this.$imageInput.files[0]);
+
+      }
+  }
+
+  resize(canvasHeight,canvasWidth)
+  {
+    let height=canvasHeight;
+    let width=canvasWidth;
+    while(height>Math.min(1000,this.deviceWidth-30)&&width>Math.min(1000,this.deviceWidth-30))
+    {
+      height/=2;
+      width/=2;
+    }
+      
+      this.$canvas.style.height = `${height}px`;
+      this.$canvas.style.width = `${width}px`;
+  }
+
+}
 
 /* Create a class called SliderPuzzle
 - PART 1 - Create the default image on the page AND allow the user to upload an image
@@ -59,10 +155,6 @@ END OF PART 2 - TEST AND DEBUG YOUR CODE
   END OF PART 3 - TEST AND DEBUG YOUR CODE
 */
 
-class SliderPuzzle {
-  constructor() {
-  }
 
-}
 
 new SliderPuzzle();
