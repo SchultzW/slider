@@ -45,21 +45,6 @@ class SliderPuzzle {
   loadImage()
   {
    
-    /*
-    - PART 4 - Choose an image
-      - Write the method loadImage
-      - if there's something in the file input on the page
-      - declare and instantiate a FileReader object
-      - set it's onload hander to an anonymous function that
-      - set the image instance variable to a new image
-      - set it's onload handler to an anonymou function that
-      - calls the createMeme method
-      - set the src property of the image to the result from reading the file
-      - read the file
-  - Change the addEventListeners
-    - bind the class to the loadImage method
-    - add an event handler to the change event for the file input element on the page
-    */
       if(this.$imageInput.files && this.$imageInput.files[0])
       {
         let reader=new FileReader();
@@ -93,6 +78,63 @@ class SliderPuzzle {
       this.$canvas.style.height = `${height}px`;
       this.$canvas.style.width = `${width}px`;
   }
+  addEventListeners()
+  {
+    
+    this.$imageInput.addEventListener('change',this.loadImage.bind(this));   
+    
+  }
+  //the index of the source image and the tile will be different
+  drawTile(iSource, iTile) 
+  {
+  
+  }
+  drawTiles()
+  {
+  
+  }
+  shuffleTile()
+  {
+      for(let i=0;i<60;i++)
+      {
+        let ran1=Math.floor(Math.random() * 16);
+        let ran2=Math.floor(Math.random() * 16);
+        [puzzle.tiles[ran1],puzzle.tiles[ran2]]=[puzzle.tiles[ran2],puzzle.tiles[ran1]];
+      }
+      
+    
+
+  }
+  start()
+  {
+    $canvas.addEventListener('mousedown',tileClick);
+  }
+  tileClick(event)
+  {
+    
+  }
+  //This method converts the x and y coordinates from the mouse event (which are window 
+  //coordinates) to coordinates on the canvas
+  windowToCanvas(x, y) {
+    const bbox = this.$canvas.getBoundingClientRect();
+    return {  x: x - bbox.left * (this.$canvas.width  / bbox.width),
+              y: y - bbox.top  * (this.$canvas.height / bbox.height)
+            };
+  }
+  //This method returns a boolean if the tile given by the index i is adjacent to the
+  //empty tile and there for can move to the empty spot
+  canMove(i) {
+    if ((i == (this.puzzle.emptyTile - 1)) || 
+        (i == (this.puzzle.emptyTile + 1)) ||
+        (i == (this.puzzle.emptyTile - this.puzzle.rowSize)) ||
+        (i == (this.puzzle.emptyTile + this.puzzle.rowSize))) {
+        return true;
+    }
+    else {
+        return false;
+    }    
+  }
+
 
 }
 
